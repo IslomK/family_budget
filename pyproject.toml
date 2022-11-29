@@ -1,0 +1,46 @@
+[tool.poetry]
+name = "family_budget"
+version = "0.1.0"
+description = ""
+authors = ["islomkarimov <i.islam.karimov@gmail.com>"]
+
+[tool.poetry.scripts]
+app = 'family_budget.main:main'
+
+[tool.poetry.dependencies]
+python = "^3.9"
+psycopg2 = "*"
+python-dotenv = "^0.21.0"
+gunicorn = "^20.1.0"
+uvicorn = "^0.20.0"
+werkzeug = "^2.2.2"
+
+[tool.poetry.dev-dependencies]
+pytest = "^5.2"
+pytest-cov = "^2.10.1"
+autoflake = "^1.4"
+flake8 = "^3.8.4"
+mypy = "^0.790"
+isort = "^5.0"
+pre-commit = "^2.8.2"
+black = "*"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.black]
+line_length = 99
+target_version = ["py39"]
+
+[tool.isort]
+profile = "black"
+line_length = 99
+force_grid_wrap = 0
+from_first = true
+use_parentheses = true
+
+[tool.mypy]
+ignore_missing_imports = false
+follow_imports = "silent"
+disallow_untyped_calls = true
