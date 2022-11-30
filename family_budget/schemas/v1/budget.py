@@ -32,5 +32,6 @@ class Budget(BudgetCreateRequest):
         orm_mode = True
 
 
-class BudgetListResponse(BaseModel):
-    data: List[Budget]
+class SharedBudgetsList(BaseModel):
+    created_budgets: Optional[List[Budget]]
+    shared_budgets: Optional[List[Budget]]

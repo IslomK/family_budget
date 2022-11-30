@@ -3,6 +3,7 @@ import uuid
 
 from pydantic import BaseModel, validator
 
+from family_budget.core.enums import OperationTypeEnum
 from family_budget.schemas.v1.budget import Budget
 
 
@@ -51,7 +52,10 @@ class ShareUserBudgetResponse(BaseModel):
     created_by: uuid.UUID
 
 
-a = {
-    "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2Njk3NzE4NjYsInN1YiI6ImlzYWV2QHNhaWQuc2FzYS5jb20ifQ.gTzU_gyIdzipS6tPIAwSNB-W4YHGxaC_ArgaDiHP0m0",
-    "refresh_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2NzAzNzQ4NzIsInN1YiI6ImlzYWV2QHNhaWQuc2FzYS5jb20ifQ.S9DrZvGqDnj_rmefRbPtcUNsLZIeDJPvKRzrKcEQ0AU",
-}
+class CreateOperationRequest(BaseModel):
+    operation_type: OperationTypeEnum
+    budget_id: uuid.UUID
+    amount: int
+    commentary: Optional[str]
+    title: str
+    created_by_id: Optional[uuid.UUID]

@@ -1,8 +1,6 @@
-from logging.config import dictConfig
-import logging
-
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi_pagination import add_pagination
 
 from family_budget.core.config import get_settings
 from family_budget.routers.v1 import api_router
@@ -22,6 +20,8 @@ def get_application():
     )
 
     _app.include_router(api_router)
+
+    add_pagination(_app)
     return _app
 
 

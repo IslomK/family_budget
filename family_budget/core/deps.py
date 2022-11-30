@@ -49,4 +49,4 @@ async def get_current_user(
             detail="Could not find user",
         )
 
-    return UserInDb(**user)
+    return UserInDb.from_orm(user)

@@ -1,7 +1,6 @@
-import uuid
-
-from fastapi import APIRouter, Depends, Path
+from fastapi import APIRouter, Depends
 from fastapi.logger import logger
+from fastapi_pagination import Page, paginate
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.orm import Session
 
@@ -9,7 +8,9 @@ from family_budget.core.database import get_db_session
 from family_budget.core.deps import get_current_user
 from family_budget.core.exceptions import EmailDuplicateException, NotFoundException
 from family_budget.models import User
-from family_budget.schemas.v1.budget import BudgetListResponse
+from family_budget.models import Budget as BudgetModel
+
+from family_budget.schemas.v1.budget import Budget
 from family_budget.schemas.v1.user import (
     ShareUserBudgetRequest,
     ShareUserBudgetResponse,
@@ -17,7 +18,6 @@ from family_budget.schemas.v1.user import (
     UserCreateRequest,
     UserInDb,
 )
-from family_budget.services.budget import get_budget_by_user_id
 from family_budget.services.user import create_user, share_user_budgets
 
 router = APIRouter()
@@ -37,17 +37,17 @@ async def create_user_method(
 
 
 @router.get(
-    "/{user_id}",
+    "/details",
     response_model=UserInDb,
     response_model_exclude_none=True,
     dependencies=[Depends(get_current_user)],
 )
 async def get_user(
-    user_id: uuid.UUID = Path(default=None, description="Id of the user to fetch"),
     database: Session = Depends(get_db_session),
+    current_user: UserInDb = Depends(get_current_user),
 ):
     try:
-        user = database.get(User, user_id)
+        user = database.get(User, current_user.id)
     except SQLAlchemyError as ex:
         logger.error(ex)
         raise NotFoundException()
@@ -55,19 +55,18 @@ async def get_user(
 
 
 @router.get(
-    "/{user_id}/budgets",
-    response_model=BudgetListResponse,
+    "/budgets",
+    response_model=Page[Budget],
     response_model_exclude_none=True,
     dependencies=[Depends(get_current_user)],
 )
 async def get_budgets_by_user_id(
-    user_id: uuid.UUID = Path(default=None, description="Id of the user to fetch"),
     database: Session = Depends(get_db_session),
-    skip: int = 0,
-    limit: int = 100,
+    current_user: UserInDb = Depends(get_current_user),
 ):
-    budgets = await get_budget_by_user_id(database, user_id, skip, limit)
-    return BudgetListResponse(data=budgets)
+    query = database.query(BudgetModel).filter(BudgetModel.created_by_id == current_user.id)
+
+    return paginate(query.all())
 
 
 @router.post(
