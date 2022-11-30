@@ -1,6 +1,6 @@
 from sqlalchemy import Column, String
-from werkzeug.security import check_password_hash, generate_password_hash
 
+from family_budget.core.utils import get_hashed_password, verify_password
 from family_budget.models.base import Base
 
 
@@ -11,8 +11,13 @@ class User(Base):
     phone_number = Column(String(16))
     hashed_password = Column(String(128))
 
-    def set_password(self, password):
-        self.password_hash = generate_password_hash(password)
+    @property
+    def password(self):
+        raise AttributeError("password is not a readable attribute")
+
+    @password.setter
+    def password(self, value):
+        self.hashed_password = get_hashed_password(value)
 
     def check_password(self, password):
-        return check_password_hash(self.password_hash, password)
+        return verify_password(self.hashed_password, password)

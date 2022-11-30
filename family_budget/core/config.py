@@ -29,6 +29,9 @@ class Settings(BaseSettings):
     DB_PASSWORD: str
     DB_URI: Optional[str]
 
+    JWT_SECRET_KEY: str
+    JWT_REFRESH_SECRET_KEY: str
+
     @validator("DB_URI", pre=True)
     def assemble_db_connection(cls, v: Optional[str], values: Dict[str, Any]) -> Any:
         if isinstance(v, str):
