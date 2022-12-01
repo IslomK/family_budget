@@ -56,4 +56,9 @@ def downgrade() -> None:
     op.drop_index(op.f("ix_operation_created_by_id"), table_name="operation")
     op.drop_index(op.f("ix_operation_budget_id"), table_name="operation")
     op.drop_table("operation")
+    op.execute(
+        """
+        DROP TYPE operationtypeenum;
+        """
+    )
     # ### end Alembic commands ###

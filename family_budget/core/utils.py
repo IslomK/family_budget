@@ -5,9 +5,7 @@ from jose import jwt
 from passlib.context import CryptContext
 
 from family_budget.core import const
-from family_budget.core.config import get_settings
-
-settings = get_settings()
+from family_budget.core.const import JWT_REFRESH_SECRET_KEY, JWT_SECRET_KEY
 
 password_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
@@ -27,7 +25,7 @@ def create_access_token(subject: Union[str, Any], expires_delta: int = None) -> 
         expires_delta = datetime.utcnow() + timedelta(minutes=const.ACCESS_TOKEN_EXPIRE_MINUTES)
 
     to_encode = {"exp": expires_delta, "sub": str(subject)}
-    encoded_jwt = jwt.encode(to_encode, settings.JWT_SECRET_KEY, const.ALGORITHM)
+    encoded_jwt = jwt.encode(to_encode, JWT_SECRET_KEY, const.ALGORITHM)
     return encoded_jwt
 
 
@@ -38,5 +36,5 @@ def create_refresh_token(subject: Union[str, Any], expires_delta: int = None) ->
         expires_delta = datetime.utcnow() + timedelta(minutes=const.REFRESH_TOKEN_EXPIRE_MINUTES)
 
     to_encode = {"exp": expires_delta, "sub": str(subject)}
-    encoded_jwt = jwt.encode(to_encode, settings.JWT_REFRESH_SECRET_KEY, const.ALGORITHM)
+    encoded_jwt = jwt.encode(to_encode, JWT_REFRESH_SECRET_KEY, const.ALGORITHM)
     return encoded_jwt

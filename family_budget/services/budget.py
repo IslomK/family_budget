@@ -13,4 +13,5 @@ async def create_budget(db: Session, request: BudgetCreateRequest, **extra_attrs
     data = {**jsonable_encoder(request, by_alias=False), **extra_attrs}
     budget = BudgetModel(**data)
     db.add(budget)
+    db.flush()
     return budget

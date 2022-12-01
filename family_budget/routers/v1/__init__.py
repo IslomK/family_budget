@@ -1,6 +1,6 @@
 from fastapi import APIRouter
 
-from family_budget.routers.v1 import auth, budget, healthcheck, user, operations
+from family_budget.routers.v1 import auth, budget, healthcheck, operations, user
 
 api_router = APIRouter(prefix="/v1")
 

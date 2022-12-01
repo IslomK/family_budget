@@ -8,6 +8,7 @@ from pydantic import ValidationError
 from sqlalchemy.orm import Session
 
 from family_budget import models
+from family_budget.core import const
 from family_budget.core.config import get_settings
 from family_budget.core.const import ALGORITHM
 from family_budget.core.database import get_db_session
@@ -23,7 +24,7 @@ async def get_current_user(
     token: str = Depends(reuseable_oauth), db: Session = Depends(get_db_session)
 ) -> UserInDb:
     try:
-        payload = jwt.decode(token, settings.JWT_SECRET_KEY, algorithms=[ALGORITHM])
+        payload = jwt.decode(token, const.JWT_SECRET_KEY, algorithms=[ALGORITHM])
 
         data = TokenPayload(**payload)
         if datetime.fromtimestamp(data.exp) < datetime.now():

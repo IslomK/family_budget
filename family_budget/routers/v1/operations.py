@@ -1,4 +1,4 @@
-from fastapi import Depends, APIRouter
+from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 
 from family_budget.core.database import get_db_session
@@ -74,4 +74,3 @@ async def get_user_incomes(
     if not operations:
         raise NotFoundException()
     return operations
-
