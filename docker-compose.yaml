@@ -23,7 +23,9 @@ services:
     environment:
       CONFIG_PATH: .env
       DB_HOST: database
-    command: poetry run python -m family_budget.main
+    command: >
+      bash -c "alembic upgrade head
+      && poetry run python -m family_budget.main"
     depends_on:
       - database
     platform: linux/amd64
