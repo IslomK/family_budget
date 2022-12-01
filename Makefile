@@ -12,7 +12,7 @@ style:
 tests:
 	docker-compose down -v
 	docker-compose up --build --remove-orphans -d database
-	poetry run python -m pytest -s tests
+	poetry run python -m pytest -v -s tests
 	docker-compose down -v
 
 app-local:
@@ -20,4 +20,4 @@ app-local:
 	poetry run alembic upgrade head
 	export ENVIRONMENT=local
 	poetry run uvicorn family_budget.app:app --reload
-	docker-compose docker
+	docker-compose down

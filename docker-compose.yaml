@@ -15,18 +15,17 @@ services:
       POSTGRES_USER: family_budget
       POSTGRES_PASSWORD: family_budget
   app:
-    build:
-      context: .
-      dockerfile: Dockerfile
+    build: .
+    volumes:
+      - ./.env:/root/.env:rw
+    ports:
+      - "8000:8000"
     environment:
       CONFIG_PATH: .env
-    env_file:
-      - .env
-    ports:
-      - "8080:8080"
+      DB_HOST: database
+    command: poetry run python -m family_budget.main
     depends_on:
       - database
-    command: poetry run app
     platform: linux/amd64
 
 volumes:
